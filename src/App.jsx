@@ -1,9 +1,11 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ContactForm from "./components/ContactForm/ContactForm.jsx";
 import ContactList from "./components/ContactList/ContactList.jsx";
 import Filter from "./components/Filter/Filter.jsx";
 import { nanoid } from "nanoid";
+
+import { ContactContext } from "./ContactContext";
 
 function App() {
   const [contacts, setContacts] = useState([
@@ -16,6 +18,8 @@ function App() {
   const [filter, setFilter] = useState("");
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+
+  const nameInputRef = useRef(null);
 
   useEffect(() => {
     const savedContacts = localStorage.getItem("contacts");
@@ -63,6 +67,8 @@ function App() {
 
     setName("");
     setNumber("");
+
+    nameInputRef.current?.focus();
   };
 
   const handleFilterChange = (e) => {
@@ -78,25 +84,25 @@ function App() {
   );
 
   return (
-    <div>
-      <h1>Phonebook</h1>
+    <ContactContext.Provider value={{ deleteContact }}>
+      <div>
+        <h1>Phonebook</h1>
 
-      <ContactForm
-        name={name}
-        number={number}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-      />
+        <ContactForm
+          name={name}
+          number={number}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          nameInputRef={nameInputRef}
+        />
 
-      <h2>Contacts</h2>
+        <h2>Contacts</h2>
 
-      <Filter value={filter} onChange={handleFilterChange} />
+        <Filter value={filter} onChange={handleFilterChange} />
 
-      <ContactList
-        contacts={filteredContacts}
-        onDeleteContact={deleteContact}
-      />
-    </div>
+        <ContactList contacts={filteredContacts} />
+      </div>
+    </ContactContext.Provider>
   );
 }
 

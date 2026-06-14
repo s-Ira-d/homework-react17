@@ -1,15 +1,11 @@
 import ContactItem from "../ContactItem/ContactItem.jsx";
 import { List } from "./ContactList.styled.js";
 
-function ContactList({ contacts, onDeleteContact }) {
+function ContactList({ contacts }) {
   return (
     <List>
       {contacts.map((contact) => (
-        <ContactItem
-          key={contact.id}
-          contact={contact}
-          onDelete={onDeleteContact}
-        />
+        <ContactItem key={contact.id} contact={contact} />
       ))}
     </List>
   );
